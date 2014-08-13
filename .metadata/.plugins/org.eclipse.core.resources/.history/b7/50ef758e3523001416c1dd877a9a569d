@@ -1,0 +1,13 @@
+package bm.hadoop.shortestpath;
+
+public class Main {
+	public static final String TARGET_NODE = "shortestpath.targetnode";
+	
+	public static void main(String[] args) {
+		String startNode = args[0];
+	    String targetNode = args[1];
+	    String inputFile = args[2];
+	    String outputDir = args[3];
+	}
+
+}

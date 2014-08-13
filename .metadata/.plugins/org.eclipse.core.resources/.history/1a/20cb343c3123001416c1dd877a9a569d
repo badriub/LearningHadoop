@@ -1,0 +1,7 @@
+package bm.hadoop.shortestpath;
+
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class Reduce extends Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
+
+}

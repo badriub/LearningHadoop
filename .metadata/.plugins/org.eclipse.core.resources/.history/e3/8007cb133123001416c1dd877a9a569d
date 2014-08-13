@@ -1,0 +1,7 @@
+package bm.hadoop.shortestpath;
+
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class Map extends Mapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
+
+}
