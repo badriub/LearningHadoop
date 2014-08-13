@@ -1,0 +1,39 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.5
+version = '1.0'
+
+jar {
+     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+   	 manifest { attributes 'Main-Class': 'test.Main' }
+}
+
+repositories {
+    mavenCentral()
+}
+
+mainLib = [
+	// from Maven Central
+	'commons-logging:commons-logging:1.1.1',
+	'org.apache.hadoop:hadoop-core:1.2.1',
+	'org.mongodb:mongo-java-driver:2.8.0',
+	'org.mongodb:mongo-hadoop-core_cdh3u3:1.0.0'
+];
+
+dependencies {    
+    compile mainLib
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}

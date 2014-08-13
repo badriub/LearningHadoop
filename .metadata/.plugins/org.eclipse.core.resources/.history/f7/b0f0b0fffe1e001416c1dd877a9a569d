@@ -1,0 +1,36 @@
+package bm.hadoop.join;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class GenericReplicatedJoin extends
+		Mapper<Object, Object, Object, Object> {
+	private Map<Object, List<Pair>> cachedRecords = new HashMap<Object, List<Pair>>();
+	private boolean distributedCacheIsSmaller;
+	private Path[] distributedCacheFiles;
+
+	public IDistributedCacheFileReader getDistributedCacheReader() {
+		return new TextDistributedCacheFileReader();
+	}
+
+	@Override
+	protected void map(Object key, Object value,
+			Mapper<Object, Object, Object, Object>.Context context)
+			throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		super.map(key, value, context);
+	}
+
+	@Override
+	protected void setup(Mapper<Object, Object, Object, Object>.Context context)
+			throws IOException, InterruptedException {
+		super.setup(context);
+
+	}
+
+}

@@ -1,0 +1,8 @@
+package bm.hadoop.join;
+
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class GenericReplicatedJoin extends
+		Mapper<Object, Object, Object, Object> {
+
+}

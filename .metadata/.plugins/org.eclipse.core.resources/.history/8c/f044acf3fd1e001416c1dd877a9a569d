@@ -1,0 +1,6 @@
+package bm.hadoop.join;
+
+public class TextDistributedCacheFileReader implements
+		IDistributedCacheFileReader<K, V> {
+
+}

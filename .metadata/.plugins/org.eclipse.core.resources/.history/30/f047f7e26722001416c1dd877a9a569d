@@ -1,0 +1,7 @@
+package bm.hadoop.sorting;
+
+import org.apache.hadoop.io.WritableComparator;
+
+public class PersonComparator extends WritableComparator {
+
+}
