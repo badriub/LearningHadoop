@@ -102,11 +102,11 @@ public class Main {
 
 	/**
 	 * Method will create new input file in the o/p directory
-	 * format will be node distance rest of nodes for each line
+	 * format will be node di
 	 * @param startNode
 	 * @param inputFile
 	 * @param outputDir
-	 * @return new input file
+	 * @return
 	 * @throws IOException
 	 */
 	private static Path createMapReduceInputData(String startNode,
