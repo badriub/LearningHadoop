@@ -2,6 +2,7 @@ package bm.hadoop.shortestpath;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
@@ -10,13 +11,15 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapred.Counters.Group;
+import org.apache.hadoop.mapred.FileInputFormat;
+import org.apache.hadoop.mapred.FileOutputFormat;
+import org.apache.hadoop.mapred.JobClient;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.KeyValueTextInputFormat;
+import org.apache.hadoop.mapred.RunningJob;
 
-public class Main {
+public class Main1 {
 	public static final String TARGET_NODE = "shortestpath.targetnode";
 	
 	public static void main(String[] args) throws Exception {
@@ -61,44 +64,40 @@ public class Main {
 		Configuration configuration = new Configuration();
 		configuration.set(TARGET_NODE, targetNode);
 		
-		Job job = new Job(configuration);
+		JobConf jobConf = new JobConf(configuration);
+		FileInputFormat.setInputPaths(jobConf, inputPath);
+		FileOutputFormat.setOutputPath(jobConf, outputPath);
 		
-		job.setJarByClass(Main.class);
-		job.setMapperClass(Map.class);
-		job.setReducerClass(Reduce.class);
+		jobConf.setJobName("myjob");
+		jobConf.setMapperClass(Map1.class);
+		jobConf.setReducerClass(Reduce1.class);
+		jobConf.setJarByClass(Main.class);
 		
-		job.setInputFormatClass(KeyValueTextInputFormat.class);
+		jobConf.setInputFormat(KeyValueTextInputFormat.class);
 		
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
+		jobConf.setMapOutputKeyClass(Text.class);
+		jobConf.setMapOutputValueClass(Text.class);
 		
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
+		jobConf.setOutputKeyClass(Text.class);
+		jobConf.setOutputValueClass(Text.class);
 
-	    FileInputFormat.setInputPaths(job, inputPath);
-	    FileOutputFormat.setOutputPath(job, outputPath);
-		job.getConfiguration().get("minDistanceSet");
-		
-		if(!job.waitForCompletion(true)) {
-			throw new RuntimeException("Job failed");
+		RunningJob job = JobClient.runJob(jobConf);
+		long counter = 0;
+		if(job.getCounters().findCounter("bm.hadoop.shortestpath.Reduce1$PathCounter", Reduce.PathCounter.TARGET_NODE_DISTANCE_COMPUTED.toString()) != null) {
+			counter = job.getCounters().findCounter("bm.hadoop.shortestpath.Reduce1$PathCounter", Reduce.PathCounter.TARGET_NODE_DISTANCE_COMPUTED.toString()).getValue();
 		}
-		
-		Counter counter = job.getCounters().findCounter(Reduce.PathCounter.TARGET_NODE_DISTANCE_COMPUTED);
-//		 Counter counter = job.getCounters().findCounter("org.apache.hadoop.mapreduce.Counter", Reduce.PathCounter.TARGET_NODE_DISTANCE_COMPUTED.toString());
-		 System.out.println(counter.toString());
-		 System.out.println(counter.getName());
-		if(counter != null && counter.getValue() > 0 ) {
-//			 CounterGroup group = job.getCounters().getGroup(Reduce.PathCounter.PATH.toString());
-//		      Iterator<Counter> iter = group.iterator();
-//		      iter.hasNext();
-//		      String path = iter.next().getName();
+		if(counter > 0 ) {
+			  Group group = job.getCounters().getGroup(Reduce.PathCounter.PATH.toString());
+		      Iterator<org.apache.hadoop.mapred.Counters.Counter> iter = group.iterator();
+		      iter.hasNext();
+		      String path = iter.next().getName();
 	      System.out.println("==========================================");
 	      System.out.println("= Shortest path found, details as follows.");
 	      System.out.println("= ");
 	      System.out.println("= Start node:  " + startNode);
 	      System.out.println("= End node:    " + targetNode);
-	      System.out.println("= Hops:        "  + counter.getValue());
-//	      System.out.println("= Path:        "  + configuration.get("path"));
+	      System.out.println("= Hops:        "  + counter);
+	      System.out.println("= Path:        "  + path);
 	      System.out.println("==========================================");
 	      return true;
 	    }

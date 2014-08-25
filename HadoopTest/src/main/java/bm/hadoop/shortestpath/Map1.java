@@ -3,22 +3,24 @@ package bm.hadoop.shortestpath;
 import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapred.MapReduceBase;
+import org.apache.hadoop.mapred.Mapper;
+import org.apache.hadoop.mapred.OutputCollector;
+import org.apache.hadoop.mapred.Reporter;
 
-public class Map extends Mapper<Text, Text, Text, Text> {
-	
+public class Map1 extends MapReduceBase implements
+		Mapper<Text, Text, Text, Text> {
 	private Text outputKey = new Text();
 	private Text outputValue = new Text();
 	
-	@Override
-	protected void map(Text key, Text values,
-			Mapper<Text, Text, Text, Text>.Context context) throws IOException,
-			InterruptedException {
+	public void map(Text key, Text values, OutputCollector<Text, Text> outputCollector,
+			Reporter reporter) throws IOException {
 		System.out.println("Start node is: "+key.toString());
 		System.out.println("Adjacency node minus the start node: "+values.toString());
 		
 		// output the i/p unchanged to preserve information
-		context.write(key, values);
+		outputCollector.collect(key, values);
+//		context.write(key, values);
 		
 		Node node = Node.fromMR(values.toString());
 		
@@ -36,9 +38,12 @@ public class Map extends Mapper<Text, Text, Text, Text> {
 				
 				outputValue.set(outputNode.toString());
 				
-				context.write(outputKey, outputValue);
+//				context.write(outputKey, outputValue);
+				outputCollector.collect(outputKey, outputValue);
 			}
 		}
+	
+		
 	}
 
 }
