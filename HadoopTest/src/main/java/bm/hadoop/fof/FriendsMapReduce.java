@@ -8,7 +8,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class FriendsMapReduce extends Mapper<Text, Text, Text, Text> {
+public class FriendsMapReduce {
 	private static final String SEPARATOR = "\t";
 	
 	 public static String joinPersonsLexicographically(String person1,
