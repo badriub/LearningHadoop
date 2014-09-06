@@ -6,7 +6,7 @@ version = '1.0'
 
 jar {
      from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-   	 manifest { attributes 'Main-Class': 'bm.hadoop.shortestpath.Main' }
+   	 manifest { attributes 'Main-Class': 'bm.hadoop.pagerank.Main' }
 }
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
     }
 }
 
-mainLib = [
+List mainLib = [
 	// from Maven Central
 	'commons-logging:commons-logging:1.1.1',
 	'org.apache.hadoop:hadoop-core:1.2.1',

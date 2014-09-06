@@ -31,15 +31,15 @@ public class Node {
 	public static Node fromMR(String value) throws IOException {
 		String[] parts = StringUtils.splitPreserveAllTokens(value,
 				fieldSeparator);
-		if (parts.length < 2) {
-			throw new IOException("Expected 2 or more parts but received "
+		if (parts.length < 1) {
+			throw new IOException("Expected 1 or more parts but received "
 					+ parts.length);
 		}
 		Node node = new Node();
-		node.setPageRank(Integer.valueOf(parts[0]));
-		if (parts.length > 2) {
+		node.setPageRank(Double.valueOf(parts[0]));
+		if (parts.length > 1) {
 			node.setAdjacentNodeNames(Arrays
-					.copyOfRange(parts, 2, parts.length));
+					.copyOfRange(parts, 1, parts.length));
 		}
 		return node;
 	}
